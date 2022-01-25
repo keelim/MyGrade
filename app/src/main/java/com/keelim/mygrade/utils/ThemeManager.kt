@@ -23,4 +23,13 @@ class ThemeManager @Inject constructor(
                 }
         }
     }
+    fun changeTheme(){
+        state = if (state == ThemeMode.DARK) {
+            applyTheme(ThemeMode.LIGHT)
+            ThemeMode.LIGHT
+        } else {
+            applyTheme(ThemeMode.DARK)
+            ThemeMode.DARK
+        }
+    }
 }
