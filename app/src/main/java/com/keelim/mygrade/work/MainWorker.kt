@@ -25,7 +25,7 @@ class MainWorker @AssistedInject constructor(
 ): CoroutineWorker(ctx, params) {
     override suspend fun doWork(): Result {
         return try {
-            notificationBuilder.showNotification(null)
+            notificationBuilder.remoteNotification()
             Result.success()
         } catch (t: Throwable) {
             if (runAttemptCount <= 3) {
