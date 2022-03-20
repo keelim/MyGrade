@@ -8,7 +8,6 @@ import androidx.work.WorkManager
 import javax.inject.Inject
 
 class WorkManagerInitializer : Initializer<WorkManager> {
-
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 

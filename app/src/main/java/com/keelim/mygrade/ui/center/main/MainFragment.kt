@@ -55,6 +55,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
+        /*
         val ad = AdView(requireContext()).apply {
             adSize = AdSize.BANNER
             adUnitId = if (BuildConfig.DEBUG.not()) {
@@ -66,6 +67,7 @@ class MainFragment : Fragment() {
         adView.addView(ad)
         val adRequest = AdRequest.Builder().build()
         ad.loadAd(adRequest)
+        */
         oss.setOnClickListener {
             startActivity((Intent(requireContext(), OssLicensesMenuActivity::class.java)))
         }
@@ -81,13 +83,7 @@ class MainFragment : Fragment() {
             }
         }
         btnChange.setOnClickListener {
-            if (themeManager.state == ThemeManager.ThemeMode.DARK) {
-                themeManager.applyTheme(ThemeManager.ThemeMode.LIGHT)
-                themeManager.state = ThemeManager.ThemeMode.LIGHT
-            } else {
-                themeManager.applyTheme(ThemeManager.ThemeMode.DARK)
-                themeManager.state = ThemeManager.ThemeMode.DARK
-            }
+            themeManager.changeTheme()
         }
         notification.setOnClickListener{
             findNavController().navigate(R.id.notificationFragment)

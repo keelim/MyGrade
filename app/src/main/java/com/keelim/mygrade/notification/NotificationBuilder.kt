@@ -4,4 +4,5 @@ import androidx.core.app.NotificationCompat
 
 interface NotificationBuilder {
     fun showNotification(action: NotificationCompat.Action?)
+    fun remoteNotification()
 }
