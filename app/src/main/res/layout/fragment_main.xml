@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="원점수"
+            android:text="@string/raw_score"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -70,7 +70,7 @@
                 android:id="@+id/value_origin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="원 점수를 입력해주세요"
+                android:hint="@string/hint_raw_score"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="과목 평균"
+            android:text="@string/lecture_average"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -103,10 +103,9 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/value_average"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="과목 평균을 입력해주세요"
+                android:hint="@string/hint_lecture_average"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -129,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="표준편차"
+            android:text="@string/standard_deviation"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -142,7 +141,7 @@
                 android:id="@+id/value_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="표준 편차를 입력해주세요"
+                android:hint="@string/hint_lecture_average"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -165,7 +164,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="학생 수"
+            android:text="@string/number_of_student"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -178,7 +177,7 @@
                 android:id="@+id/value_student"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="학생 수를 입력해주세요"
+                android:hint="@string/hint_student_number"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -190,7 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="Submit"
+        android:text="@string/submit"
         app:layout_constraintBottom_toTopOf="@+id/progressbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/student_container" />
@@ -230,7 +229,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="copyright(c) 2002 All rights reserved keelim"
+        android:text="@string/copyright"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

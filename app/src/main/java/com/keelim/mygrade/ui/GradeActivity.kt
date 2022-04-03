@@ -7,10 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.keelim.mygrade.BuildConfig
 import com.keelim.data.model.Result
 import com.keelim.mygrade.databinding.ActivityGradeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,10 +16,8 @@ import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class GradeActivity : AppCompatActivity() {
-    private val data: Result? by lazy { intent.getParcelableExtra("data") }
-    private val binding: ActivityGradeBinding by lazy {
-        ActivityGradeBinding.inflate(layoutInflater)
-    }
+    private val data by lazy { intent.getParcelableExtra("data") ?: Result.emptyResult() }
+    private val binding: ActivityGradeBinding by lazy { ActivityGradeBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,28 +26,14 @@ class GradeActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        grade.text = data?.grade.orEmpty()
-        level.text = data?.point.orEmpty()
-        val ad = AdView(this@GradeActivity).apply {
-            adSize = AdSize.BANNER
-            adUnitId = if (BuildConfig.DEBUG.not()) {
-                BuildConfig.key
-            } else {
-                "ca-app-pub-3940256099942544/6300978111"
-            }
-        }
-        adView.addView(ad)
-        val adRequest = AdRequest.Builder().build()
-        ad.loadAd(adRequest)
+        grade.text = data.grade
+        level.text = data.point
         btnCopy.setOnClickListener {
             saveAndCopy()
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent())
-        finish()
+        title.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun saveAndCopy() {
@@ -76,14 +56,14 @@ class GradeActivity : AppCompatActivity() {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, it)
             }, "Share Capture Image"))
-        }.onFailure {
-            it.printStackTrace()
-        }
+        }.onFailure { throwable -> throwable.printStackTrace() }
     }
 
     private fun getBitmapFromView(view: View): Bitmap? {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        view.draw(Canvas(bitmap))
-        return bitmap
+        return Bitmap
+            .createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            .also { bitmap ->
+                view.draw(Canvas(bitmap))
+            }
     }
 }

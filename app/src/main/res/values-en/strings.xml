@@ -1,13 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">MyGrade</string>
-    <string name="notification_channel_notice" translatable="false">notice</string>
-    <string name="notification_channel_event" translatable="false">event</string>
+    <string name="app_name">MyGrade</string>
+    <string name="notification_channel_notice">notice</string>
+    <string name="notification_channel_event">event</string>
     <string name="raw_score">raw score</string>
     <string name="lecture_average">average</string>
-    <string name="standard_deviation">standard deviation</string>
+    <string name="standard_deviation">std</string>
     <string name="number_of_student">students</string>
     <string name="submit">submit</string>
-    <string name="copyright" translatable="false">copyright(c) 2022 All rights reserved keelim</string>
     <string name="hint_raw_score">Please enter raw score</string>
     <string name="hint_lecture_average">Please enter lecture average</string>
     <string name="hint_std">Please enter std</string>

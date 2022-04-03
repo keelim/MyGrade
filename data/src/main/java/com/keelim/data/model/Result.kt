@@ -8,4 +8,9 @@ import kotlinx.parcelize.Parcelize
 data class Result(
     val grade: String,
     val point: String
-) : Parcelable
+) : Parcelable{
+    companion object{
+        fun emptyResult() = Result("", "")
+    }
+}
+

@@ -55,19 +55,6 @@ class MainFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        /*
-        val ad = AdView(requireContext()).apply {
-            adSize = AdSize.BANNER
-            adUnitId = if (BuildConfig.DEBUG.not()) {
-                BuildConfig.key
-            } else {
-                "ca-app-pub-3940256099942544/6300978111"
-            }
-        }
-        adView.addView(ad)
-        val adRequest = AdRequest.Builder().build()
-        ad.loadAd(adRequest)
-        */
         oss.setOnClickListener {
             startActivity((Intent(requireContext(), OssLicensesMenuActivity::class.java)))
         }

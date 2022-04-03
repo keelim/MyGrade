@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyGrade</string>
+    <string name="notification_channel_notice">notice</string>
+    <string name="notification_channel_event">event</string>
+    <string name="raw_score">원점수</string>
+    <string name="lecture_average">과목 평균</string>
+    <string name="standard_deviation">표준편차</string>
+    <string name="number_of_student">학생 수</string>
+    <string name="submit">제출</string>
+    <string name="hint_raw_score">원 점수를 입력해주세요</string>
+    <string name="hint_lecture_average">과목 평균을 입력해주세요</string>
+    <string name="hint_std">표준편차를 입력해주세요</string>
+    <string name="hint_student_number">학생 수를 입력해주세요</string>
+</resources>
