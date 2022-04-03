@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -40,8 +41,8 @@
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:context=".ui.center.main.MainActivity"
-        tools:layout_editor_absoluteY="73dp">
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView"
+        tools:context=".ui.center.main.MainActivity">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/origin_text"

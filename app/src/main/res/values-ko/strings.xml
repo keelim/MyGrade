@@ -12,4 +12,6 @@
     <string name="hint_lecture_average">과목 평균을 입력해주세요</string>
     <string name="hint_std">표준편차를 입력해주세요</string>
     <string name="hint_student_number">학생 수를 입력해주세요</string>
+    <string name="notification">공지사항</string>
+    <string name="history">기록</string>
 </resources>

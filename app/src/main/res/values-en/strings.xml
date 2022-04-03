@@ -12,4 +12,6 @@
     <string name="hint_lecture_average">Please enter lecture average</string>
     <string name="hint_std">Please enter std</string>
     <string name="hint_student_number">Please enter student number</string>
+    <string name="notification">Notifications</string>
+    <string name="history">History</string>
 </resources>

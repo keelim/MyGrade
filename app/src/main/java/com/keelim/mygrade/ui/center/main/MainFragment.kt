@@ -99,7 +99,8 @@ class MainFragment : Fragment() {
                                     ).apply {
                                         putExtra(
                                             "data", Result(
-                                                grade, getLevel(
+                                                grade,
+                                                getLevel(
                                                     (it.value * binding.valueStudent.text.toString()
                                                         .toInt()) / 100
                                                 )
