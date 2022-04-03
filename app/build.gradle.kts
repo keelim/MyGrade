@@ -1,3 +1,5 @@
+import ProjectConfigurations.versionCode
+import ProjectConfigurations.versionName
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
@@ -58,6 +60,8 @@ dependencies {
     implementation(Dep.AndroidX.navigation.fragment)
 
     implementation(Dep.timber)
+    implementation(Dep.AndroidX.paging.common)
+    kapt(Dep.AndroidX.room.compiler)
 
     testImplementation(Dep.Test.junit)
     androidTestImplementation(Dep.Test.androidJunit)

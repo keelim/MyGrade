@@ -7,16 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.oss.licenses.OssLicensesActivity
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
-import com.keelim.common.repeatCallDefaultOnStarted
 import com.keelim.data.model.Result
-import com.keelim.mygrade.BuildConfig
 import com.keelim.mygrade.R
 import com.keelim.mygrade.databinding.FragmentMainBinding
 import com.keelim.mygrade.ui.GradeActivity
@@ -39,51 +37,47 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
+        return FragmentMainBinding.inflate(inflater, container, false)
+            .apply {
+                btnSubmit.setOnClickListener {
+                    if (validation()) {
+                        viewModel.submit(
+                            valueOrigin.text.toString().toFloat(),
+                            valueAverage.text.toString().toFloat(),
+                            valueNumber.text.toString().toFloat(),
+                            valueStudent.text.toString().toInt(),
+                            true
+                        )
+                    }
+                }
+                notification.setOnClickListener {
+                    findNavController().navigate(R.id.notificationFragment)
+                }
+                history.setOnClickListener {
+                    findNavController().navigate(R.id.historyFragment)
+                }
+                footer.setOnClickListener {
+                    startActivity(Intent(requireContext(), OssLicensesActivity::class.java))
+                }
+            }
+            .also {
+                _binding = it
+            }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         observeState()
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
-    }
-
-    private fun initViews() = with(binding) {
-        oss.setOnClickListener {
-            startActivity((Intent(requireContext(), OssLicensesMenuActivity::class.java)))
-        }
-        btnSubmit.setOnClickListener {
-            if (validation()) {
-                viewModel.submit(
-                    valueOrigin.text.toString().toFloat(),
-                    valueAverage.text.toString().toFloat(),
-                    valueNumber.text.toString().toFloat(),
-                    valueStudent.text.toString().toInt(),
-                    true
-                )
-            }
-        }
-        btnChange.setOnClickListener {
-            themeManager.changeTheme()
-        }
-        notification.setOnClickListener{
-            findNavController().navigate(R.id.notificationFragment)
-        }
-        
-        history.setOnClickListener{
-            findNavController().navigate(R.id.historyFragment)
-        }
+        super.onDestroyView()
     }
 
     private fun observeState() = viewLifecycleOwner.lifecycleScope.launch {
-        repeatCallDefaultOnStarted {
-            viewModel.state.collect {
+        viewModel.state.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect {
                 when (it) {
                     is MainState.UnInitialized -> Unit
                     is MainState.Loading -> {
@@ -91,43 +85,43 @@ class MainFragment : Fragment() {
                     }
                     is MainState.Success -> {
                         if (validation()) {
-                            val grade = when {
+                            when {
                                 it.value < 30 -> "A"
                                 it.value < 60 -> "B"
                                 it.value < 80 -> "C"
                                 it.value < 100 -> "D"
                                 else -> "F"
-                            }
-                            startActivity(
-                                Intent(
-                                    requireContext(),
-                                    GradeActivity::class.java
-                                ).apply {
-                                    putExtra(
-                                        "data", Result(
-                                            grade,
-                                            getLevel(
-                                                (it.value * binding.valueStudent.text.toString()
-                                                    .toInt()) / 100
+                            }.also { grade ->
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        GradeActivity::class.java
+                                    ).apply {
+                                        putExtra(
+                                            "data", Result(
+                                                grade, getLevel(
+                                                    (it.value * binding.valueStudent.text.toString()
+                                                        .toInt()) / 100
+                                                )
                                             )
                                         )
-                                    )
-                                })
+                                    })
+                            }
                         }
                     }
-                    is MainState.Error -> Snackbar.make(
-                        binding.root,
-                        "오류가 발생했습니다",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    is MainState.Error -> {
+                        Snackbar
+                            .make(binding.root, "오류가 발생했습니다", Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
                 }
+
             }
-        }
     }
 
     private fun getLevel(level: Int): String = level.toString() + " / " + binding.valueStudent.text
 
-    private fun validation(): Boolean = with(binding){
+    private fun validation(): Boolean = with(binding) {
         var flag = true
         if (valueOrigin.text.toString().isEmpty()) {
             valueOrigin.error = "원 점수를 입력해주세요"
