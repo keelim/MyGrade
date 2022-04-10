@@ -70,7 +70,7 @@ class GradeActivity : AppCompatActivity() {
         tv.draw(c)
         return b
     }
-
+//    https://stackoverflow.com/questions/5536066/convert-view-to-bitmap-on-android
     fun View.convertToBitmap(): Bitmap {
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         measure(measureSpec, measureSpec)
