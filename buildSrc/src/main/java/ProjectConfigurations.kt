@@ -6,7 +6,7 @@ object ProjectConfigurations {
     const val targetSdk = 31
     const val buildTools = "31.0.0"
     const val applicationID = "com.keelim.mygrade"
-    const val versionCode = 7
-    const val versionName = "0.0.7"
+    const val versionCode = 8
+    const val versionName = "0.0.8"
     val javaVer = JavaVersion.VERSION_11
 }
