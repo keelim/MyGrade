@@ -3,6 +3,7 @@ package com.keelim.mygrade.ui
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -36,15 +37,13 @@ class GradeActivity : AppCompatActivity() {
     }
 
     private fun saveAndCopy() {
-        val view = window.decorView.rootView
-        val screenBitmap = getBitmapFromView(view)
-
+        val bitmap = createBitmapFromLayout(binding.root)
         runCatching {
             val cachePath = File(applicationContext.cacheDir, "images").apply {
                 mkdirs()
             }
             val stream = FileOutputStream("$cachePath/image.png")
-            screenBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.close()
             FileProvider.getUriForFile(
                 applicationContext,
@@ -58,11 +57,26 @@ class GradeActivity : AppCompatActivity() {
         }.onFailure { throwable -> throwable.printStackTrace() }
     }
 
-    private fun getBitmapFromView(view: View): Bitmap? {
-        return Bitmap
-            .createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-            .also { bitmap ->
-                view.draw(Canvas(bitmap))
-            }
+    private fun createBitmapFromLayout(tv: View): Bitmap {
+        val spec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        tv.measure(spec, spec)
+        tv.layout(0, 0, tv.measuredWidth, tv.measuredHeight)
+        val b = Bitmap.createBitmap(
+            tv.width, tv.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(b)
+        c.translate((-tv.scrollX).toFloat(), (-tv.scrollY).toFloat())
+        tv.draw(c)
+        return b
+    }
+
+    fun View.convertToBitmap(): Bitmap {
+        val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        measure(measureSpec, measureSpec)
+        val r = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(r)
+        draw(canvas)
+        return r
     }
 }
