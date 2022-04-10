@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HistoryFragment: Fragment() {
+class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val viewModel: HistoryViewModel by viewModels()
     private val binding get() = _binding!!
@@ -30,13 +30,15 @@ class HistoryFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        return binding.root
+        return FragmentHistoryBinding.inflate(inflater, container, false).apply {
+            historyRecycler.adapter = historyAdapter
+        }.also {
+            _binding = it
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         observeState()
     }
 
@@ -45,23 +47,19 @@ class HistoryFragment: Fragment() {
         _binding = null
     }
 
-    private fun initViews() = with(binding){
-        historyRecycler.adapter = historyAdapter
-    }
-
     private fun observeState() = viewLifecycleOwner.lifecycleScope.launch {
         repeatCallDefaultOnStarted {
             viewModel.state.collect {
-                when(it){
+                when (it) {
                     is HistoryState.UnInitialized -> {}
                     is HistoryState.Loading -> {
                         binding.loading.toVisible()
                     }
                     is HistoryState.Success -> {
                         binding.loading.toGone()
-                        if(it.data.isEmpty()){
+                        if (it.data.isEmpty()) {
                             binding.noHistory.toVisible()
-                        } else{
+                        } else {
                             binding.noHistory.toGone()
                             historyAdapter.submitList(it.data)
                         }

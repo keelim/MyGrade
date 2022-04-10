@@ -12,7 +12,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.oss.licenses.OssLicensesActivity
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import com.keelim.data.model.Result
 import com.keelim.mygrade.R
@@ -123,23 +122,22 @@ class MainFragment : Fragment() {
     private fun getLevel(level: Int): String = level.toString() + " / " + binding.valueStudent.text
 
     private fun validation(): Boolean = with(binding) {
-        var flag = true
         if (valueOrigin.text.toString().isEmpty()) {
             valueOrigin.error = "원 점수를 입력해주세요"
-            flag = false
+            return false
         }
         if (valueAverage.text.toString().isEmpty()) {
             valueAverage.error = "평균 값을 입력해주세요"
-            flag = false
+            return false
         }
         if (valueNumber.text.toString().isEmpty()) {
             valueNumber.error = "표준 편차를 입력해주세요"
-            flag = false
+            return false
         }
         if (valueStudent.text.toString().isEmpty()) {
             valueStudent.error = "학생 수를 입력해주세요"
-            flag = false
+            return false
         }
-        return flag
+        return true
     }
 }

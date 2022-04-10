@@ -27,30 +27,36 @@ class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<NotificationViewModel>()
-
-    private val notificationAdapter by lazy {
-        NotificationAdapter()
-    }
+    private val notificationAdapter by lazy { NotificationAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
-        return binding.root
+        return FragmentNotificationBinding.inflate(inflater, container, false).apply {
+            notificationRecycler.apply {
+                val snapHelper = LinearSnapHelper()
+                adapter = notificationAdapter.apply {
+                    doOnNextLayout {
+                    }
+                }
+                snapHelper.attachToRecyclerView(this)
+            }
+        }.also {
+            _binding = it
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-        viewModel.fetchRelease()
         observeState()
+        initData()
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun observeState() = viewLifecycleOwner.lifecycleScope.launch {
@@ -76,18 +82,6 @@ class NotificationFragment : Fragment() {
         }
     }
 
-    private fun initViews() = with(binding) {
-
-        notificationRecycler.apply {
-            val snapHelper = LinearSnapHelper()
-            adapter = notificationAdapter.apply {
-                doOnNextLayout {
-                }
-            }
-            snapHelper.attachToRecyclerView(this)
-        }
-    }
-
     private fun handleSuccess(data: List<Notification>) {
         binding.loading.toGone()
         if (data.isEmpty()) {
@@ -96,5 +90,9 @@ class NotificationFragment : Fragment() {
             binding.tvNoData.toGone()
         }
         notificationAdapter.submitList(data)
+    }
+
+    private fun initData(){
+        viewModel.fetchRelease()
     }
 }

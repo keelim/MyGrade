@@ -14,11 +14,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CenterActivity : AppCompatActivity() {
     private val viewModel: CenterViewModel by viewModels()
-    private val binding: ActivityCenterBinding by lazy {
-        ActivityCenterBinding.inflate(
-            layoutInflater
-        )
-    }
+    private val binding by lazy { ActivityCenterBinding.inflate(layoutInflater) }
 
     @Inject
     lateinit var notificationBuilder: NotificationBuilder

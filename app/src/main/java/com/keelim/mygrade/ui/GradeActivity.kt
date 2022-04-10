@@ -17,23 +17,22 @@ import java.io.FileOutputStream
 @AndroidEntryPoint
 class GradeActivity : AppCompatActivity() {
     private val data by lazy { intent.getParcelableExtra("data") ?: Result.emptyResult() }
-    private val binding: ActivityGradeBinding by lazy { ActivityGradeBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivityGradeBinding.inflate(layoutInflater).apply {
+            grade.text = data.grade
+            level.text = data.point
+            btnCopy.setOnClickListener {
+                saveAndCopy()
+            }
+            title.setOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initViews()
-    }
-
-    private fun initViews() = with(binding) {
-        grade.text = data.grade
-        level.text = data.point
-        btnCopy.setOnClickListener {
-            saveAndCopy()
-        }
-        title.setOnClickListener {
-            onBackPressed()
-        }
     }
 
     private fun saveAndCopy() {
