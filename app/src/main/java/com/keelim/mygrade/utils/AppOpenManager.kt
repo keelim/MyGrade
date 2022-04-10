@@ -13,47 +13,51 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.keelim.mygrade.BuildConfig
+import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
-import timber.log.Timber
 
-class AppOpenManager @Inject constructor(): LifecycleObserver {
-    private var appOpenAd: AppOpenAd? = null
-    private var currentActivity: Activity? = null
-    private val AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294"
-    private val adRequest: AdRequest by lazy { AdRequest.Builder().build() }
-    private lateinit var application: Application
-    private var isShowingAd = false
+class AppOpenManager @Inject constructor() : LifecycleObserver {
+    companion object {
+        const val AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294"
+    }
+    private val adRequest by lazy { AdRequest.Builder().build() }
     private val isAdAvailable: Boolean
         get() = appOpenAd != null && wasLoadTimeLessThanNHoursAgo()
+    private lateinit var application: Application
+    private var appOpenAd: AppOpenAd? = null
+    private var currentActivity: Activity? = null
+    private var isShowingAd = false
     private var loadTime: Long = 0
 
-    fun initialize(application: Application){
+    fun initialize(application: Application) {
         this.application = application
-
-        application.registerActivityLifecycleCallbacks(object: ActivityLifecycleCallbacks{
+        application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
             override fun onActivityStarted(activity: Activity) {
                 currentActivity = activity
                 showAdIfAvailable()
                 Timber.d("onStart")
             }
-            override fun onActivityResumed(activity: Activity) { currentActivity = activity }
+            override fun onActivityResumed(activity: Activity) {
+                currentActivity = activity
+            }
             override fun onActivityStopped(activity: Activity) {}
             override fun onActivityPaused(activity: Activity) {}
             override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle) {}
-            override fun onActivityDestroyed(activity: Activity) { currentActivity = null }
+            override fun onActivityDestroyed(activity: Activity) {
+                currentActivity = null
+            }
         })
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
+
     /**
      * Request an ad
      * Have unused ad, no need to fetch another.
      */
     fun fetchAd() {
-        if (isAdAvailable) {
-            return
-        }
+        if (isAdAvailable) return
         /**
          * Called when an app open ad has loaded.
          * @param ad the loaded app open ad.
@@ -72,6 +76,7 @@ class AppOpenManager @Inject constructor(): LifecycleObserver {
                 appOpenAd = ad
                 loadTime = Date().time
             }
+
             /**
              * Called when an app open ad has failed to load.
              * @param loadAdError the error.
@@ -81,22 +86,20 @@ class AppOpenManager @Inject constructor(): LifecycleObserver {
         }
         AppOpenAd.load(
             application,
-            if(BuildConfig.DEBUG){
-                AD_UNIT_ID
-            } else{
-                BuildConfig.AD_OPEN_ID
-            },
+            if (BuildConfig.DEBUG) AD_UNIT_ID
+             else BuildConfig.AD_OPEN_ID,
             adRequest,
             AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
             loadCallback
         )
     }
+
     /**
      * Only show ad if there is not already an app open ad currently showing
      * and an ad is available.
      */
     fun showAdIfAvailable() {
-        if (!isShowingAd && isAdAvailable) {
+        if (isShowingAd.not() && isAdAvailable) {
             Timber.d("Will show ad.")
             appOpenAd!!.apply {
                 fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -114,7 +117,9 @@ class AppOpenManager @Inject constructor(): LifecycleObserver {
                         isShowingAd = true
                     }
                 }
-                show(currentActivity)
+                currentActivity?.let { activity ->
+                    show(activity)
+                }
             }
         } else {
             Timber.d("Can not show ad.")
